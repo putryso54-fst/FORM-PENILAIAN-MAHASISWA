@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Form Nilai Mahasiswa</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0px 10px 20px rgba(0,0,0,0.15);
+      width: 420px;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      text-align: left;
+      font-weight: 600;
+      color: #444;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    input:focus {
+      border-color: #6a11cb;
+      outline: none;
+      box-shadow: 0 0 5px rgba(106,17,203,0.3);
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+    .hasil {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .lulus {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .tidak-lulus {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Form Penilaian Mahasiswa</h2>
+    <form id="formMahasiswa">
+      <label>Nama Mahasiswa</label>
+      <input type="text" id="nama" required>
+
+      <label>Absensi</label>
+      <input type="number" id="absensi" min="0" required>
+
+      <label>Nilai Tugas</label>
+      <input type="number" id="tugas" min="0" max="100" required>
+
+      <label>Nilai UTS</label>
+      <input type="number" id="uts" min="0" max="100" required>
+
+      <label>Nilai UAS</label>
+      <input type="number" id="uas" min="0" max="100" required>
+
+      <button type="button" onclick="hitungNilai()">Proses</button>
+    </form>
+
+    <div id="hasil"></div>
+  </div>
+
+  <script>
+    function hitungNilai() {
+      let nama = document.getElementById("nama").value;
+      let absensi = parseInt(document.getElementById("absensi").value);
+      let tugas = parseInt(document.getElementById("tugas").value);
+      let uts = parseInt(document.getElementById("uts").value);
+      let uas = parseInt(document.getElementById("uas").value);
+
+      let nilaiAkhir = (tugas + uts + uas) / 3;
+      let keterangan = "";
+      let predikat = "";
+
+      if (absensi < 16) {
+        keterangan = "TIDAK LULUS (Absensi kurang dari 16)";
+        predikat = "E"; 
+      } else {
+        if (nilaiAkhir >= 60) {
+          keterangan = "LULUS";
+        } else {
+          keterangan = "TIDAK LULUS (Nilai akhir di bawah 60)";
+        }
+
+        if (nilaiAkhir >= 86) {
+          predikat = "A";
+        } else if (nilaiAkhir >= 80) {
+          predikat = "A-";
+        } else if (nilaiAkhir >= 75) {
+          predikat = "B+";
+        } else if (nilaiAkhir >= 70) {
+          predikat = "B";
+        } else if (nilaiAkhir >= 65) {
+          predikat = "C+";
+        } else if (nilaiAkhir >= 60) {
+          predikat = "C";
+        } else if (nilaiAkhir >= 40) {
+          predikat = "D";
+        } else {
+          predikat = "E";
+        }
+      }
+
+      let classHasil = (keterangan.includes("LULUS") && absensi >= 16 && nilaiAkhir >= 60) ? "lulus" : "tidak-lulus";
+
+      document.getElementById("hasil").innerHTML = `
+        <div class="hasil ${classHasil}">
+          <b>Hasil Penilaian:</b><br>
+          Nama: ${nama} <br>
+          Absensi: ${absensi} <br>
+          Nilai Tugas: ${tugas} <br>
+          Nilai UTS: ${uts} <br>
+          Nilai UAS: ${uas} <br>
+          Nilai Akhir (Rata-rata): ${nilaiAkhir.toFixed(2)} <br>
+          Predikat: ${predikat} <br>
+          Keterangan: <b>${keterangan}</b>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
